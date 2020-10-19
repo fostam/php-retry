@@ -1,0 +1,30 @@
+{
+  "name": "fostam/retry",
+  "type": "library",
+  "description": "Retry any callable until success or max retries, using various delay policies",
+  "keywords" : ["retry", "delay", "repeat"],
+  "license": "MIT",
+  "require": {
+    "php": ">=7.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5"
+  },
+  "authors": [
+    {
+      "name": "Stefan Stammler",
+      "email": "stefan@fostam.org"
+    }
+  ],
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Fostam\\Retry\\": "src/lib"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Fostam\\Retry\\Tests\\": "tests"
+    }
+  }
+}
