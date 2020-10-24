@@ -31,17 +31,19 @@ catch (RetryLimitException $e) {
 // success before maximum number of attempts have been exceeded
 ````
 
-## Callables
+## Payload Callables
+Payload callables can be functions, class/object methods or closures, as listed in the [PHP documentation](https://www.php.net/manual/en/language.types.callable.php).
+
 ### Failure Condition
-Callables are considered to have failed if they either throw an `Exception` or return `false`.
+Payload callables are considered to have failed if they either throw an `Exception` or return `false`.
 If `false` is a legitimate result of your callable, use `onException()` instead of `onFailure()`,
 in which case the return value of the callable will be ignored.
 
-The original exception that was thrown in the callable is chained to the `RetryLimitException`
+The original exception that was thrown in the payload callable is chained to the `RetryLimitException`
 and can be retrieved via `$e->getPrevious()`.
 
-You can also use the `onCondition()` method and pass a second callable that takes the result
-of the first callable as argument and returns `true` or `false` to indicate whether the
+You can also use the `onCondition()` method and pass a validation callable that takes the result
+of the payload callable as argument and returns `true` or `false` to indicate whether the
 original callable failed or not:
 
 ```php
@@ -71,6 +73,10 @@ Retry::onFailure(function() use ($x, $y) {
 ````
 
 ## Delay Policies
+*Retry* sleeps between two payload calls. There are multiple policies available to determine
+the time period of the delay. All numerical values for delay policies are interpreted
+as milliseconds (ms).
+
 ### Constant Sleep Value
 ```php
 // sleep 2000 milliseconds (i.e. 2 seconds) between attempts
@@ -94,10 +100,10 @@ $policy = new ExponentialDelayPolicy(1000, 3);
 
 ### Fixed Series of Sleep Values
 ```php
-// sleep 2, 2, 4, 20, 20, 20, 20 ...
+// sleep 2, 2, 4, 20, 20, 20, 20 ... (stick to last value after series has ended)
 $policy = new SeriesDelayPolicy([2000, 2000, 4000, 20000]);
 
-// sleep 2, 2, 4, 20, 2, 2, 4, 20, 2, 2, 4, ...
+// sleep 2, 2, 4, 20, 2, 2, 4, 20, 2, 2, 4, ... (repeat series after it has ended)
 $policy = new SeriesDelayPolicy([2000, 2000, 4000, 20000], true);
 ```
 
@@ -125,8 +131,8 @@ Retry::onFailure('myfunc', 3);
 ```
 
 ### Getting the Number of Attempts
-If you need to get the number of attempts on success, e.g. for logging purposes,
-you can pass a variable by reference to the `onFailure()` and `onException()` methods:
+If you need to get the number of attempts that were necessary for a successful payload call, e.g. for logging purposes,
+you can pass a variable by reference to the `onFailure()`, `onException()` and `onCondition()`methods:
 
 ```php
 Retry::onFailure('myfunc', 3, null, $tries);
