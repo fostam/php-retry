@@ -8,7 +8,7 @@ use Fostam\Retry\Exception\RetryLimitException;
 
 class Retry {
     /**
-     * @param callable $subject
+     * @param callable $payload
      * @param int $count
      * @param DelayPolicyInterface|null $delayPolicy
      * @param int &$tries
@@ -16,14 +16,14 @@ class Retry {
      * @return int
      * @throws RetryLimitException
      */
-    public static function onFailure(Callable $subject, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
-        return self::execute($subject, function($result) {
+    public static function onFailure(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
+        return self::execute($payload, function($result) {
             return $result !== false;
         }, $count, $delayPolicy, $tries);
     }
 
     /**
-     * @param callable $subject
+     * @param callable $payload
      * @param int $count
      * @param DelayPolicyInterface|null $delayPolicy
      * @param int &$tries
@@ -31,14 +31,14 @@ class Retry {
      * @return int
      * @throws RetryLimitException
      */
-    public static function onException(Callable $subject, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
-        return self::execute($subject, function($result) {
+    public static function onException(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
+        return self::execute($payload, function($result) {
             return true;
         }, $count, $delayPolicy, $tries);
     }
 
     /**
-     * @param callable $subject
+     * @param callable $payload
      * @param callable $condition
      * @param int $count
      * @param DelayPolicyInterface|null $delayPolicy
@@ -47,12 +47,12 @@ class Retry {
      * @return int
      * @throws RetryLimitException
      */
-    public static function onCondition(Callable $subject, Callable $condition, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
-        return self::execute($subject, $condition, $count, $delayPolicy, $tries);
+    public static function onCondition(Callable $payload, Callable $condition, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
+        return self::execute($payload, $condition, $count, $delayPolicy, $tries);
     }
 
     /**
-     * @param callable $subject
+     * @param callable $payload
      * @param callable|null $resultTester
      * @param int $count
      * @param DelayPolicyInterface|null $delayPolicy
@@ -61,7 +61,7 @@ class Retry {
      * @return mixed
      * @throws RetryLimitException
      */
-    public static function execute(Callable $subject, ?Callable $resultTester, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
+    public static function execute(Callable $payload, ?Callable $resultTester, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
         $tries = 1;
 
         do {
@@ -70,7 +70,7 @@ class Retry {
             $callableResult = null;
 
             try {
-                $callableResult = call_user_func($subject);
+                $callableResult = call_user_func($payload);
                 if ($resultTester) {
                     $success = call_user_func($resultTester, $callableResult);
                 }
