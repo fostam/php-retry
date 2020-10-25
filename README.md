@@ -121,7 +121,7 @@ $policy = new NoneDelayPolicy();
 
 ## Advanced Features
 ### Omitting Delay Policy
-In case you do not want any delay between the attemps, you can either use the
+In case you do not want any delay between the attempts, you can either use the
 `NoneDelayPolicy` as described above, pass `NULL` as Delay Policy, or omit the Delay
 Policy argument at all:
 
