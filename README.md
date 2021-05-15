@@ -138,3 +138,7 @@ you can pass a variable by reference to the `onFailure()`, `onException()` and `
 Retry::onFailure('myfunc', 3, null, $tries);
 print "success after {$tries} attempts";
 ```
+
+### Abort the Retry Loop
+To abort the retry loop without signalling "success", an `AbortException` can be thrown from inside the
+payload function.
