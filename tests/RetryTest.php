@@ -4,6 +4,7 @@ namespace Fostam\Retry;
 
 use Exception;
 use Fostam\Retry\DelayPolicy\NoneDelayPolicy;
+use Fostam\Retry\Exception\AbortException;
 use Fostam\Retry\Exception\RetryLimitException;
 use PHPUnit\Framework\TestCase;
 
@@ -145,6 +146,14 @@ final class RetryTest extends TestCase {
         $maxTries = 5;
         $this->expectException(RetryLimitException::class);
         Retry::execute(function() { return false; }, function($result) {
+            return $result !== false;
+        }, $maxTries, new NoneDelayPolicy());
+    }
+
+    public function testAbort(): void {
+        $maxTries = 5;
+        $this->expectException(AbortException::class);
+        Retry::execute(function() { throw new AbortException(); }, function($result) {
             return $result !== false;
         }, $maxTries, new NoneDelayPolicy());
     }

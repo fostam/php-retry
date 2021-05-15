@@ -5,6 +5,7 @@ namespace Fostam\Retry;
 use Exception;
 use Fostam\Retry\DelayPolicy\DelayPolicyInterface;
 use Fostam\Retry\Exception\RetryLimitException;
+use Fostam\Retry\Exception\AbortException;
 
 class Retry {
     /**
@@ -15,6 +16,7 @@ class Retry {
      *
      * @return int
      * @throws RetryLimitException
+     * @throws AbortException
      */
     public static function onFailure(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
         return self::execute($payload, function($result) {
@@ -30,6 +32,7 @@ class Retry {
      *
      * @return int
      * @throws RetryLimitException
+     * @throws AbortException
      */
     public static function onException(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
         return self::execute($payload, function($result) {
@@ -46,6 +49,7 @@ class Retry {
      *
      * @return int
      * @throws RetryLimitException
+     * @throws AbortException
      */
     public static function onCondition(Callable $payload, Callable $condition, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
         return self::execute($payload, $condition, $count, $delayPolicy, $tries);
@@ -60,6 +64,7 @@ class Retry {
      *
      * @return mixed
      * @throws RetryLimitException
+     * @throws AbortException
      */
     public static function execute(Callable $payload, ?Callable $resultTester, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
         $tries = 1;
@@ -74,6 +79,9 @@ class Retry {
                 if ($resultTester) {
                     $success = call_user_func($resultTester, $callableResult);
                 }
+            } catch (AbortException $e) {
+                // throw on
+                throw $e;
             } catch (Exception $e) {
                 $success = false;
             }
