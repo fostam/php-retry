@@ -14,7 +14,7 @@ class Retry {
      * @param DelayPolicyInterface|null $delayPolicy
      * @param int &$tries
      *
-     * @return int
+     * @return mixed
      * @throws RetryLimitException
      * @throws AbortException
      */
@@ -30,11 +30,11 @@ class Retry {
      * @param DelayPolicyInterface|null $delayPolicy
      * @param int &$tries
      *
-     * @return int
+     * @return mixed
      * @throws RetryLimitException
      * @throws AbortException
      */
-    public static function onException(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
+    public static function onException(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
         return self::execute($payload, function($result) {
             return true;
         }, $count, $delayPolicy, $tries);
@@ -47,11 +47,11 @@ class Retry {
      * @param DelayPolicyInterface|null $delayPolicy
      * @param int &$tries
      *
-     * @return int
+     * @return mixed
      * @throws RetryLimitException
      * @throws AbortException
      */
-    public static function onCondition(Callable $payload, Callable $condition, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
+    public static function onCondition(Callable $payload, Callable $condition, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
         return self::execute($payload, $condition, $count, $delayPolicy, $tries);
     }
 
@@ -66,7 +66,7 @@ class Retry {
      * @throws RetryLimitException
      * @throws AbortException
      */
-    public static function execute(Callable $payload, ?Callable $resultTester, int $count, ?DelayPolicyInterface $delayPolicy = null, &$tries = 0) {
+    public static function execute(Callable $payload, ?Callable $resultTester, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
         $tries = 1;
 
         do {
