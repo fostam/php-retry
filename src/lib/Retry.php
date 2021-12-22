@@ -91,7 +91,7 @@ class Retry {
             }
 
             if ($tries >= $count) {
-                throw new RetryLimitException("execution failed {$tries} times", 0, $e);
+                throw new RetryLimitException($tries, $e);
             }
 
             if ($delayPolicy) {
