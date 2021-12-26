@@ -3,9 +3,9 @@
 namespace Fostam\Retry\DelayPolicy;
 
 class SeriesDelayPolicy implements DelayPolicyInterface {
-    private $delaysMS;
-    private $ptr;
-    private $repeat;
+    private array $delaysMS;
+    private int $ptr;
+    private bool $repeat;
 
     /**
      * ConstantDelayHandler constructor.

@@ -3,8 +3,8 @@
 namespace Fostam\Retry\DelayPolicy;
 
 class LinearDelayPolicy implements DelayPolicyInterface {
-    private $delayMS;
-    private $incrementUS;
+    private int $delayMS;
+    private int $incrementUS;
 
     /**
      * LinearDelayHandler constructor.

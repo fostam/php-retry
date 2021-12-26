@@ -3,7 +3,7 @@
 namespace Fostam\Retry\DelayPolicy;
 
 class ConstantDelayPolicy implements DelayPolicyInterface {
-    private $delayMS;
+    private int $delayMS;
 
     /**
      * ConstantDelayHandler constructor.

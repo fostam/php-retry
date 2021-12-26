@@ -3,8 +3,8 @@
 namespace Fostam\Retry\DelayPolicy;
 
 class ExponentialDelayPolicy implements DelayPolicyInterface {
-    private $delayMS;
-    private $multiplier;
+    private int $delayMS;
+    private float $multiplier;
 
     /**
      * ExponentialDelayPolicy constructor.
@@ -22,7 +22,7 @@ class ExponentialDelayPolicy implements DelayPolicyInterface {
      */
     public function getDelay(): int {
         $delay = $this->delayMS;
-        $this->delayMS = round($this->delayMS * $this->multiplier);
+        $this->delayMS = intval(round($this->delayMS * $this->multiplier));
         return $delay;
     }
 }

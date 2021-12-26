@@ -3,8 +3,8 @@
 namespace Fostam\Retry\DelayPolicy;
 
 class JitterDelayPolicy implements DelayPolicyInterface {
-    private $delayMS;
-    private $jitterMS;
+    private int $delayMS;
+    private int $jitterMS;
 
     /**
      * JitterDelayPolicy constructor.

@@ -35,7 +35,7 @@ class Retry {
      * @throws AbortException
      */
     public static function onException(Callable $payload, int $count, ?DelayPolicyInterface $delayPolicy = null, int &$tries = 0) {
-        return self::execute($payload, function($result) {
+        return self::execute($payload, function() {
             return true;
         }, $count, $delayPolicy, $tries);
     }
